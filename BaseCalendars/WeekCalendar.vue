@@ -38,6 +38,7 @@ import Vue from 'vue'
 import moment from 'moment-timezone'
 import {
   getCalendarData,
+  getDaysInMonths,
   getDayLabel,
   getDateString,
   CalendarDataT
@@ -121,10 +122,8 @@ export default Vue.extend({
       return firstDayIndex + 1
     },
     daysInMonth (): number {
-      const isFebruary = this.displayMonth === 2
-      const isLeapYear = (this.displayYear % 4 === 0 && this.displayYear % 100 !== 0) || this.displayYear % 400 === 0
-      if (isFebruary && isLeapYear) return 29
-      const daysNumber = this.initialCalendarData.daysInMonths[this.monthIndex]
+      const daysInMonthsList = getDaysInMonths(this.displayYear)
+      const daysNumber = daysInMonthsList[this.monthIndex]
       return daysNumber
     },
     initialMonthDay (): number {
@@ -154,7 +153,7 @@ export default Vue.extend({
           }
 
           // Build DayDisplayT
-          const label = getDayLabel(monthDay, this.displayMonth)
+          const label = getDayLabel(monthDay, this.displayMonth, this.displayYear)
           const dateString = getDateString(monthDay, this.displayMonth, this.displayYear, !monthHasStarted, monthHasEnded)
           const isToday = dateString === todayDateString
           weekDayDisplayList.push({
